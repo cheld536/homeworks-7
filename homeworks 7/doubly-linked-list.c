@@ -203,6 +203,31 @@ int insertLast(headNode* h, int key) {
  * list의 마지막 노드 삭제
  */
 int deleteLast(headNode* h) {
+	listNode* removenode;			// 삭제할 노드를 담을 포인터
+	listNode* prenode;				// 삭제하기전 노드의 정보를 저장하는 포인터
+	
+	if (h->first == NULL)
+		return 0;						// 공백 리스트인 경우, 삭제 중단
+	if (h->first->rlink == NULL)		// 리스트에 노드가 한개인 경우
+	{
+		free(h->first);				// 첫번째 노드 메모리 해제
+		h->first = NULL;			// 리스트 시작 포인터를 null로 설정한다.
+		return 0;
+	}
+	else                           // 리스트에 노드가 여려개 있는 경우
+	{
+		prenode = h->first;					//이전 노드가 first를 가르킨다.
+		removenode = h->first->rlink;		//제거 노드가 first의 link를 가르킨다.
+		while (removenode->rlink != NULL)		// 가르키는 링크가 NULL값이면
+		{
+			prenode = removenode;				// removenode의 주소를 prenode에 저장
+			removenode = removenode->rlink;		// 다음 리스트를 찾는다.
+		}
+		prenode->rlink = NULL;				//pre가 가르키고 있는 링크를 NULL로만든다.
+
+	
+	}
+
 
 
 	return 0;
@@ -251,6 +276,19 @@ int deleteFirst(headNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(headNode* h) {
+	listNode* p;			//	처음 주소를 저장하는 노드
+	listNode* q;			//	역순으로 변경해주기 위한 q,r노드들
+	listNode* r;			
+	p = h->first;			// 포인터 p를 첫 번째 노드에 설정
+	q = NULL;				// 초기화
+
+	while (p != NULL) {		// 리스트의첫 번째 노드부터 링크를 따라 다음 노드로 이동하면서 노드간 연결을 바꾼다.
+		r = q;				// 초기화
+		q = p;				// q에 p노드의 정보를 저장
+		p = p->rlink;		// 다음 노드를 찾는다.
+		q->rlink = r;		// r을 다음 노드로 지정한다.
+	}
+	h->first = q;			// 처음 주소를 q로 변경
 
 	return 0;
 }
@@ -260,8 +298,8 @@ int invertList(headNode* h) {
 /* 리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입 */
 
 int insertNode(headNode* h, int key) {
-   listNode* newnode = (listNode*)malloc(sizeof(listNode));
-   listNode* findnode = (listNode*)malloc(sizeof(listNode));
+   listNode* newnode = (listNode*)malloc(sizeof(listNode));		// 노드를 입력받을 노드 
+   listNode* findnode = (listNode*)malloc(sizeof(listNode));	// 
 
    newnode->key = key;
    newnode->rlink = NULL;
@@ -312,6 +350,36 @@ int insertNode(headNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(headNode* h, int key) {
-
+	listNode* prenode;																// 이전 주소를 저장할 노드
+	listNode* findnode;																// 처음 주소값을 저장할 노드
+	listNode* removenode = (listNode*)malloc(sizeof(listNode));						// 찾은 노드 값을 해제할 노드를 동적할당 
+	if (h->first == NULL)															// 헤더가 NULL값이면 0값을 반환
+	{
+		printf("빈 리스트입니다.\n");
+		return 0;
+	}
+	else if (h->first->key == key) 													// key값이 첫 노드 일 경우
+	{
+		
+		removenode = h->first;														// 노드가 헤드를 가르킨다.
+		h->first = removenode->rlink;												// 헤드가 removenode.rlink가 가르키는 노드를 가르킨다.
+		h->first->llink =NULL;														
+		free(removenode);															// 메모리 할당 해제
+		return 1;
+	}
+	else {
+		prenode = h->first;
+		findnode = h->first->rlink;
+		while (findnode->rlink != NULL&&findnode->rlink->key == key)						// remove ->link 가 널이 아닐때까지, 사용자가 찾는 값 까지 탐색
+		{
+			prenode = findnode;														// removenode의 주소를 prenode에 저장
+			findnode = findnode->rlink;													// 다음 리스트를 찾는다.
+		}
+		findnode->rlink->llink = prenode;
+		prenode->rlink = findnode->rlink;												// 삭제하고 중간 값을 삭제하고  노드를 이어준다.
+		free(findnode);
+				
+	}
+	
 	return 1;
 }
