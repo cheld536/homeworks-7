@@ -66,8 +66,9 @@ int main()
 		printf(" Insert First  = f           Delete First  = t\n");
 		printf(" Invert List   = r           Quit          = q\n");
 		printf("----------------------------------------------------------------\n");
-		printf("-------------[ 김 윤 희 ] ----------------[ 2018038014 ]---------\n");
+		printf("----------------[ 김 윤 희 ]-----------[ 2018038014 ]-----------\n");
 		printf("----------------------------------------------------------------\n");
+
 		printf("Command = ");
 		scanf(" %c", &command);
 
@@ -242,14 +243,14 @@ int deleteLast(headNode* h) {
  */
 int insertFirst(headNode* h, int key) {
 	listNode* node = (listNode*)malloc(sizeof(listNode));
-	node->key = key;					// 노를 초기화 해준다.
+	node->key = key;													//새로운 노드를 초기화한다.
 	node->rlink = NULL;
 	node->llink = NULL;
-	if(h->first == NULL)				// 헤더가 비었으면
+	if(h->first == NULL)												// 헤더가 비었으면
 	{
 		h->first = node;
 	}
-	else								// 헤더가 비어 있지 않을경우
+	else																// 그외의 경우에는
 	{
 		node->rlink = h->first;
 		h->first->llink = node;
@@ -321,9 +322,9 @@ int insertNode(headNode* h, int key) {
    else {
       findnode = h->first; // findnode의 주소값을 frist로 가르킨다.
 
-      while (findnode!= NULL)   // 찾는 노드가 널이 아닐때 까지
+      while (findnode!= NULL)   						// 찾는 노드가 널값을 가지기 이전까지 탐색
       {
-         if (newnode->key <= findnode->key)				// 찾는 key값이 입력된 값보다 크거나 같을때
+         if (newnode->key <= findnode->key)				// 입력된 값이 찾는 값보다 작거나 같을때 
          {
             newnode->rlink = findnode;
             newnode->llink = findnode->llink;
@@ -338,7 +339,7 @@ int insertNode(headNode* h, int key) {
          findnode = findnode->rlink;                  	// 다음 리스트로 넘어간다.
       }
 
-      if (findnode->rlink == NULL && findnode->key < key)				// 마지막에 넣어야 할때
+      if (findnode->rlink == NULL && findnode->key < key)		// 새로 입력된 값이 마지막에 입력될 경우
       {
          findnode->rlink = newnode;
          newnode->llink = findnode;
@@ -366,7 +367,10 @@ int deleteNode(headNode* h, int key) {
 		if (h->first->key == key) 													// key값이 첫 노드 일 경우
 		{
 		
-			deleteFirst(h,key);													// 메모리 할당 해제
+			removenode = h->first;														// 노드가 헤드를 가르킨다.
+			h->first = removenode->rlink;												// 헤드가 removenode.rlink가 가르키는 노드를 가르킨다.
+			h->first->llink =NULL;														
+		 	free(removenode);															// 메모리 할당 해제
 		 	return 0;
 	 	}
 		else {
@@ -383,7 +387,7 @@ int deleteNode(headNode* h, int key) {
 				
 			}
 			
-			if(findnode->rlink == NULL)															// 마지막 노드를 지울때 
+			if(findnode->rlink == NULL)													// 마지막 노드를 지울때 
 			{
 				removenode = findnode;
 				prenode = findnode->llink;
